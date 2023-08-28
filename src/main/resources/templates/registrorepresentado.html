@@ -2,7 +2,7 @@
 <html>
 
     <head>
-        <title>Registro</title>
+        <title>Registrar Estudiante</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -15,17 +15,18 @@
                     <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
                     <div class="card">
                         <div class="card-body">
-                            <h1 class="card-title text-center">Regístrate</h1>
-                            <form action="/registro" method="post">
+                            <h1 class="card-title text-center">Registrar Estudiante</h1>
+                            <!-- El formulario se configura para enviar datos a "/guardar-estudiante" con el método POST -->
+                            <form th:action="@{/guardar-estudiante}" method="post">
                                 <div class="mb-3">
                                     <label for="nombre" class="form-label">Nombre</label>
                                     <input type="text" class="form-control" id="nombre" name="nombre"
-                                           placeholder="Ingresa tu nombre" required>
+                                           placeholder="Ingresa el nombre del estudiante" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="apellido" class="form-label">Apellido</label>
                                     <input type="text" class="form-control" id="apellido" name="apellido"
-                                           placeholder="Ingresa tu apellido" required>
+                                           placeholder="Ingresa el apellido del estudiante" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="fechadenacimiento" class="form-label">Fecha de nacimiento</label>
@@ -35,14 +36,14 @@
                                 <div class="mb-3">
                                     <label for="correoelectronico" class="form-label">Correo electrónico</label>
                                     <input type="email" class="form-control" id="correoelectronico"
-                                           name="correoelectronico" placeholder="Ingresa tu correo electrónico" required>
+                                           name="correoelectronico" placeholder="Ingresa el correo electrónico del estudiante" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="contrasenia" class="form-label">Contraseña</label>
                                     <input type="password" class="form-control" id="contrasenia" name="contrasenia"
-                                           placeholder="Ingresa tu contraseña" required>
+                                           placeholder="Ingresa la contraseña del estudiante" required>
                                 </div>
-                                <button type="submit" class="btn btn-dark btn-block">Registrar</button>
+                                <button type="submit" class="btn btn-dark btn-block">Registrar Estudiante</button>
                             </form>
                         </div>
                     </div>

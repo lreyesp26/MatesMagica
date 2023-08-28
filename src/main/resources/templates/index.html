@@ -20,13 +20,14 @@
                     </div>
                 </div>
                 <div class="col-md-8 p-0">
+                    <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
                     <div class="main" style="padding: 20px; background-color: #FFF;">
                         <div class="col-md-6 col-sm-12">
                             <div class="login-form" style="margin-top: 10%;">
                                 <form action="/login" method="post" onsubmit="return validateForm()">
                                     <div class="form-group">
-                                        <label>User Name</label>
-                                        <input type="text" class="form-control" name="nombre" id="nombre" placeholder="User Name">
+                                        <label>Correo Electrónico</label>
+                                        <input type="text" class="form-control" name="correoelectronico" id="correoelectronico" placeholder="Correo Electrónico">
                                     </div>
                                     <div class="form-group">
                                         <label>Password</label>
@@ -38,10 +39,10 @@
 
                                 <script>
                                     function validateForm() {
-                                        var nombre = document.getElementById("nombre").value;
+                                        var correoelectronico = document.getElementById("correoelectronico").value;
                                         var contrasenia = document.getElementById("contrasenia").value;
 
-                                        if (nombre === "" || contrasenia === "") {
+                                        if (correoelectronico === "" || contrasenia === "") {
                                             alert("Por favor, complete todos los campos.");
                                             return false; // Evita que se envíe el formulario si faltan datos
                                         }

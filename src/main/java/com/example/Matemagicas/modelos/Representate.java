@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "Usuarios")
+@Table(name = "Representate")
 @Data
-public class Usuario {
+public class Representate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,10 +16,7 @@ public class Usuario {
 
     @Column
     private String apellido;
-
-    @Column
-    private String rol;
-
+    
     @Column
     private String fechadenacimiento;
 
@@ -28,4 +25,5 @@ public class Usuario {
 
     @Column
     private String contrasenia;
+    
 }

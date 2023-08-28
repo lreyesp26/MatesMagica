@@ -1,51 +1,68 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.Matemagicas.controlador;
 
-import com.example.Matemagicas.modelos.Usuario;
-import com.example.Matemagicas.repositorio.UsuarioRepository;
+import com.example.Matemagicas.modelos.Representate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.example.Matemagicas.repositorio.RepresentateRepository;
 
 /**
  *
  * @author Reyes
  */
-
 @Controller
 @RequestMapping("/registro")
 public class RegistroController {
 
     @Autowired
-    private UsuarioRepository usuarioRepository; // Debes tener un repositorio para acceder a la base de datos
+    private RepresentateRepository usuarioRepository;
 
-    @PostMapping("/nuevo")
+    @GetMapping("/register")
+    public String registerPage() {
+        return "register";
+    }
+    
+    @GetMapping("/index")
+    public String indexPage() {
+        return "index";
+    }
+
+    @PostMapping
     public String registrarUsuario(
-        @RequestParam String nombre,
-        @RequestParam String apellido,
-        @RequestParam String rol,
-        @RequestParam String fechadenacimiento,
-        @RequestParam String correoelectronico,
-        @RequestParam String contrasenia
+            @RequestParam String nombre,
+            @RequestParam String apellido,
+            @RequestParam String fechadenacimiento,
+            @RequestParam String correoelectronico,
+            @RequestParam String contrasenia,
+            RedirectAttributes redirectAttributes
     ) {
+        // Verifica si ya existe un usuario con el mismo correo electrónico
+        Representate usuarioExistente = usuarioRepository.findByCorreoelectronico(correoelectronico);
+        if (usuarioExistente != null) {
+            // Agrega un mensaje de error al modelo
+            redirectAttributes.addFlashAttribute("error", "El correo electrónico ya está en uso.");
+            return "redirect:/register";
+        }
+
         // Crea una instancia de Usuario con los datos del formulario
-        Usuario usuario = new Usuario();
+        Representate usuario = new Representate();
         usuario.setNombre(nombre);
         usuario.setApellido(apellido);
-        usuario.setRol(rol);
         usuario.setFechadenacimiento(fechadenacimiento);
         usuario.setCorreoelectronico(correoelectronico);
         usuario.setContrasenia(contrasenia);
-        
+
         // Guarda el usuario en la base de datos
         usuarioRepository.save(usuario);
 
-        // Redirige a una página de confirmación o a donde desees
-        return "confirmacion";
+        // Agrega un mensaje de éxito al modelo
+        redirectAttributes.addFlashAttribute("success", "Te has registrado correctamente.");
+
+        // Redirige a la página de inicio de sesión
+        return "redirect:/index";
     }
 }

@@ -4,7 +4,7 @@
  */
 package com.example.Matemagicas.repositorio;
 
-import com.example.Matemagicas.modelos.Usuario;
+import com.example.Matemagicas.modelos.Representate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  * @author Reyes
  */
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    Usuario findByNombre(String nombre);
+public interface RepresentateRepository extends JpaRepository<Representate, Long> {
+    Representate findByCorreoelectronico(String correoelectronico);
 }
