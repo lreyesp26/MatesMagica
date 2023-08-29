@@ -4,6 +4,8 @@
  */
 package com.example.Matemagicas.controlador;
 
+import com.example.Matemagicas.dto.EstudianteCalificacionDTO;
+import com.example.Matemagicas.modelos.Calificacion;
 import com.example.Matemagicas.modelos.Estudiante;
 import com.example.Matemagicas.modelos.Representate;
 import com.example.Matemagicas.repositorio.EstudianteRepository;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import com.example.Matemagicas.repositorio.RepresentateRepository;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,16 +46,30 @@ public class LoginController {
         Long representanteId = (Long) session.getAttribute("representanteId");
 
         if (representanteId != null) {
-            // Busca los estudiantes asociados a este representante
+            // Busca el representante actual
             Representate representante = representanteRepository.findById(representanteId).orElse(null);
 
             if (representante != null) {
                 List<Estudiante> estudiantes = representante.getEstudiantes();
-                model.addAttribute("estudiantes", estudiantes);
-                return "estudiantes"; // Carga la página "estudiantes.html" con la lista de estudiantes
+
+                List<EstudianteCalificacionDTO> estudiantesConCalificaciones = new ArrayList<>();
+
+                for (Estudiante estudiante : estudiantes) {
+                    for (Calificacion calificacion : estudiante.getCalificaciones()) {
+                        EstudianteCalificacionDTO dto = new EstudianteCalificacionDTO();
+                        dto.setNombre(estudiante.getNombre());
+                        dto.setApellido(estudiante.getApellido());
+                        dto.setMateria(calificacion.getMateria());
+                        dto.setNivel(calificacion.getNivel());
+                        dto.setCalificacion(calificacion.getCalificacion());
+                        estudiantesConCalificaciones.add(dto);
+                    }
+                }
+
+                model.addAttribute("estudiantes", estudiantesConCalificaciones);
+                return "estudiantes";
             }
         }
-        // Si no se encuentra el representante o no tiene estudiantes, redirige a alguna otra página o maneja el caso según sea necesario.
         return "redirect:/representante";
     }
 

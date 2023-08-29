@@ -57,4 +57,9 @@ public class controlador {
         return modelo;
     }
     
+    @GetMapping("/estudiante")
+    public ModelAndView estudiantepresentado() {
+        ModelAndView modelo = new ModelAndView("estudiante");
+        return modelo;
+    }
 }

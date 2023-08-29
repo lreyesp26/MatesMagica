@@ -1,6 +1,7 @@
 package com.example.Matemagicas.modelos;
 
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.Data;
 
 @Entity
@@ -30,4 +31,7 @@ public class Estudiante {
     @ManyToOne // Muchos estudiantes pueden tener un representante
     @JoinColumn(name = "representante_id") // Esto establece la clave foránea
     private Representate representante;
+
+    @OneToMany(mappedBy = "estudiante") // Una lista de calificaciones para cada estudiante
+    private List<Calificacion> calificaciones;
 }
