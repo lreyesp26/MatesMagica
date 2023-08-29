@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import com.example.Matemagicas.repositorio.RepresentateRepository;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  *
@@ -31,30 +32,28 @@ public class LoginController {
     @Autowired
     private EstudianteRepository estudianteRepository;
 
-    @GetMapping("/estudiante")
-    public String estudiantePage() {
-        return "estudiante"; // Esto carga la página de estudiantes (estudiante.html)
-    }
-
     @GetMapping("/representante")
-    public String representantePage() {
-        return "representante"; // Esto carga la página de representantes (representante.html)
+    public String representantepage() {
+        return "representante"; // Esto carga la página de estudiantes (estudiante.html)
     }
 
-    @GetMapping("/admin")
-    public String adminPage() {
-        return "admin"; // Esto carga la página de administradores (admin.html)
-    }
+    @GetMapping("/estudiantes")
+    public String estudiantesPage(Model model, HttpSession session) {
+        // Obtén el representante actual desde la sesión
+        Long representanteId = (Long) session.getAttribute("representanteId");
 
-    @GetMapping("/index")
-    public String loginPage(Model model) {
-        // Verifica si hay un mensaje de éxito en el modelo
-        if (model.containsAttribute("success")) {
-            // Muestra el mensaje de éxito en la página
-            model.addAttribute("message", model.asMap().get("success"));
+        if (representanteId != null) {
+            // Busca los estudiantes asociados a este representante
+            Representate representante = representanteRepository.findById(representanteId).orElse(null);
+
+            if (representante != null) {
+                List<Estudiante> estudiantes = representante.getEstudiantes();
+                model.addAttribute("estudiantes", estudiantes);
+                return "estudiantes"; // Carga la página "estudiantes.html" con la lista de estudiantes
+            }
         }
-
-        return "index";
+        // Si no se encuentra el representante o no tiene estudiantes, redirige a alguna otra página o maneja el caso según sea necesario.
+        return "redirect:/representante";
     }
 
     @PostMapping("/login")

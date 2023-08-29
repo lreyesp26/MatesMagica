@@ -25,7 +25,7 @@ public class RegistroController {
     public String registerPage() {
         return "register";
     }
-    
+
     @GetMapping("/index")
     public String indexPage() {
         return "index";
@@ -45,7 +45,7 @@ public class RegistroController {
         if (usuarioExistente != null) {
             // Agrega un mensaje de error al modelo
             redirectAttributes.addFlashAttribute("error", "El correo electrónico ya está en uso.");
-            return "redirect:/register";
+            return "redirect:/registro/register";
         }
 
         // Crea una instancia de Usuario con los datos del formulario
@@ -62,7 +62,7 @@ public class RegistroController {
         // Agrega un mensaje de éxito al modelo
         redirectAttributes.addFlashAttribute("success", "Te has registrado correctamente.");
 
-        // Redirige a la página de inicio de sesión
-        return "redirect:/index";
+        // Redirige nuevamente a la página de registro
+        return "redirect:/registro/register";
     }
 }

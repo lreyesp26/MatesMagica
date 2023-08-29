@@ -50,4 +50,11 @@ public class controlador {
         ModelAndView modelo = new ModelAndView("registrorepresentado");
         return modelo;
     }
+    
+    @GetMapping("/calificacionesrepresentante")
+    public ModelAndView vistacalifacionesrepresentado() {
+        ModelAndView modelo = new ModelAndView("calificacionesrepresentante");
+        return modelo;
+    }
+    
 }
