@@ -1,79 +1,367 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-        <link rel="stylesheet" href="style.css" type="text/css"/>
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-        <title>Start Page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <style>
-            .grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
+            .custom-header {
                 text-align: center;
+                margin-bottom: 20px;
+                font-size: 24px;
+                font-weight: bold;
+                color: white;
+                padding: 10px;
+                background-color: purple;
+                flex-direction: column;
             }
 
-            .container {
-                padding: 45px;
-                font-size: 30px;
+            .header-container {
+                max-width: 10000px;
+                margin: 0 auto;
+                display: flex;
+                justify-content: center;
+                align-items: stretch;
+            }
+
+            .fixed-header {
+                position: fixed;
+                width: 100%;
+                top: 0;
+                left: 0;
+                z-index: 1000;
+            }
+
+            .custom-left-container {
+                flex: 1;
+                max-width: 300px;
+                background-color: purple;
+                flex-direction: column;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                height: 100vh;
+                overflow-y: auto;
+            }
+
+            .custom-button {
+                width: 100%;
+                margin-bottom: 20px;
+                background-color: purple;
+                transition: background-color 0.3s;
+                cursor: pointer;
+                border: none;
+                color: white;
                 text-align: center;
+                font-size: 20px;
+                padding: 10px 20px;
+            }
+
+            .custom-button:hover {
+                background-color: pink;
+            }
+
+            /* Estilos para el contenedor derecho */
+            .custom-right-container {
+                flex: 2;
+                background-color: lightgray;
+                padding: 20px;
+            }
+
+            /* Estilos para el nuevo contenedor en la parte superior del contenedor derecho */
+            .top-container {
+                background-color: lightblue;
+                padding: 10px;
+                margin-bottom: 20px;
+                margin-top: 35px; /* Agrega un margen superior */
+            }
+
+            /* Estilos para el contenedor de mensajes */
+            .mensaje-container {
+                position: relative;
+                padding: 20px;
+                border: 1px solid #ddd;
+                margin-bottom: 20px;
+            }
+
+            /* Estilos para el ícono dentro del contenedor de mensajes */
+            .mensaje-icon {
+                position: absolute;
+                bottom: 0;
+                right: 0;
             }
         </style>
     </head>
     <body>
-        <div class="grid"> 
-            <div class="container">
-                <div class="card">
-                    <div class="card-header">
+        <div class="container-fluid p-0">
+            <div class="custom-header fixed-header">Matemagicas</div>
+            <div class="header-container">
+                <!-- Contenedor izquierdo con botones -->
+                <div class="custom-left-container">
+                    <!-- Botón Suma -->
+                    <button class="custom-button btn btn-secondary text-center" onclick="mostrarOperacion('Suma')">
                         Suma
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Nivel 1</li>
-                        <li class="list-group-item">Nivel 2</li>
-                        <li class="list-group-item">Nivel 3</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="container">        
-                <div class="card">
-                    <div class="card-header">
+                    </button>
+
+                    <!-- Botón Resta -->
+                    <button class="custom-button btn btn-secondary text-center" onclick="mostrarOperacion('Resta')">
                         Resta
+                    </button>
+
+                    <!-- Botón Multiplicación -->
+                    <button class="custom-button btn btn-secondary text-center" onclick="mostrarOperacion('Multiplicación')">
+                        Multiplicación
+                    </button>
+
+                    <!-- Botón División -->
+                    <button class="custom-button btn btn-secondary text-center" onclick="mostrarOperacion('División')">
+                        División
+                    </button>
+                </div>
+
+                <!-- Contenedor derecho -->
+                <div class="custom-right-container">
+                    <!-- Nuevo contenedor en la parte superior -->
+                    <div class="top-container">
+                        <h2 id="operacionSeleccionada">Bienvenido, <span th:text="${session.nombreEstudiante}"></span> <span th:text="${session.apellidoEstudiante}"></span></h2>
                     </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Nivel 1</li>
-                        <li class="list-group-item">Nivel 2</li>
-                        <li class="list-group-item">Nivel 3</li>
-                    </ul>
+
+                    <!-- Agregar divs para mostrar los mensajes de cada operación -->
+                    <div class="mensaje-container" id="mensajeSuma" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoSuma()">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l14 0" />
+                        <path d="M15 16l4 -4" />
+                        <path d="M15 8l4 4" />
+                        </svg>
+                    </div>
+
+                    <div class="mensaje-container" id="mensajeResta" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoResta()">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l14 0" />
+                        <path d="M15 16l4 -4" />
+                        <path d="M15 8l4 4" />
+                        </svg>
+                    </div>
+
+                    <!-- Para mensajeMultiplicacion -->
+                    <div class="mensaje-container" id="mensajeMultiplicacion" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoMultiplicacion()">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l14 0" />
+                        <path d="M15 16l4 -4" />
+                        <path d="M15 8l4 4" />
+                        </svg>
+                    </div>
+
+                    <!-- Para mensajeDivision -->
+                    <div class="mensaje-container" id="mensajeDivision" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoDivision()">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l14 0" />
+                        <path d="M15 16l4 -4" />
+                        <path d="M15 8l4 4" />
+                        </svg>
+                    </div>
                 </div>
             </div>
+            <script>
+                var estadoMensajeSuma = 0;
+                var estadoMensajeResta = 0;
+                var estadoMensajeMultiplicacion = 0;
+                var estadoMensajeDivision = 0;
 
 
-            <div class="container">        
-                <div class="card">
-                    <div class="card-header">
-                        Multiplicacion
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Nivel 1</li>
-                        <li class="list-group-item">Nivel 2</li>
-                        <li class="list-group-item">Nivel 3</li>
-                    </ul>
-                </div>
-            </div> 
+                function mostrarOperacion(operacion) {
+                    var encabezado = document.getElementById('operacionSeleccionada');
+                    var mensajeSuma = document.getElementById('mensajeSuma');
+                    var mensajeResta = document.getElementById('mensajeResta');
 
-            <div class="container">  
-                <div class="card">
-                    <div class="card-header">
-                        Division
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Nivel 1</li>
-                        <li class="list-group-item">Nivel 2</li>
-                        <li class="list-group-item">Nivel 3</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+                    encabezado.textContent = operacion;
+
+                    // Ocultar todos los mensajes
+                    mensajeSuma.style.display = 'none';
+                    mensajeResta.style.display = 'none';
+                    mensajeMultiplicacion.style.display = 'none';
+                    mensajeDivision.style.display = 'none';
+
+
+                    // Mostrar el mensaje correspondiente a la operación seleccionada
+                    if (operacion === 'Suma') {
+                        mensajeSuma.style.display = 'block';
+                    } else if (operacion === 'Resta') {
+                        mensajeResta.style.display = 'block';
+                    } else if (operacion === 'Multiplicación') {
+                        mensajeMultiplicacion.style.display = 'block';
+                    } else if (operacion === 'División') {
+                        mensajeDivision.style.display = 'block';
+                    }
+
+                    estadoMensajeSuma = 0;
+                    cambiarTextoSuma();
+
+                    estadoMensajeResta = 0;
+                    cambiarTextoResta();
+
+                    estadoMensajeMultiplicacion = 0;
+                    cambiarTextoMultiplicacion();
+
+                    estadoMensajeDivision = 0;
+                    cambiarTextoDivision();
+                }
+
+                // Función para cambiar el texto de mensajeSuma cuando el usuario hace clic en la flecha
+                function cambiarTextoSuma() {
+                    var mensajeSuma = document.getElementById('mensajeSuma');
+                    var textoSuma = '';
+
+                    if (estadoMensajeSuma === 0) {
+                        textoSuma = '<p>La suma es cuando juntas números para obtener un número más grande. Por ejemplo, si tienes 2 manzanas y luego le agregas 3 más, tendrás 5 manzanas en total. La suma es como contar cosas juntas.</p>' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoSuma()">' +
+                                '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>' +
+                                '<path d="M5 12l14 0" />' +
+                                '<path d="M15 16l4 -4" />' +
+                                '<path d="M15 8l4 4" />' +
+                                '</svg>';
+                        estadoMensajeSuma = 1;
+                    } else if (estadoMensajeSuma === 1) {
+                        textoSuma = '<p>La suma es como un juego en el que juntamos números. Cuando sumamos, estamos agregando números para encontrar el total. Por ejemplo, 2 + 3 = 5. Puedes sumar números más grandes haciendo lo mismo.</p>' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoSuma()">' +
+                                '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>' +
+                                '<path d="M5 12l14 0" />' +
+                                '<path d="M15 16l4 -4" />' +
+                                '<path d="M15 8l4 4" />' +
+                                '</svg>';
+                        estadoMensajeSuma = 2;
+                    } else {
+                        // Aquí puedes agregar un tercer estado o volver al primero según tus necesidades
+                        // Ejemplo:
+                        textoSuma = '<p>En matemáticas, la suma es una operación que combina dos o más números para obtener un resultado. Puedes sumar números positivos y negativos. Por ejemplo, 5 + (-3) = 2. También puedes sumar números decimales, como 1.5 + 2.3 = 3.8.</p>' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoSuma()">' +
+                                '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>' +
+                                '<path d="M5 12l14 0" />' +
+                                '<path d="M15 16l4 -4" />' +
+                                '<path d="M15 8l4 4" />' +
+                                '</svg>';
+                        estadoMensajeSuma = 0;
+                    }
+
+                    mensajeSuma.innerHTML = textoSuma;
+                }
+
+                function cambiarTextoResta() {
+                    var mensajeResta = document.getElementById('mensajeResta'); // Nuevo identificador
+                    var textoResta = '';
+
+                    if (estadoMensajeResta === 0) {
+                        textoResta = '<p>La resta es cuando separas números para encontrar cuántos quedan. Por ejemplo, si tienes 5 galletas y comes 2, te quedan 3 galletas. La resta es como quitar cosas.</p>' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoResta()">' +
+                                '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>' +
+                                '<path d="M5 12l14 0" />' +
+                                '<path d="M15 16l4 -4" />' +
+                                '<path d="M15 8l4 4" />' +
+                                '</svg>';
+                        estadoMensajeResta = 1;
+                    } else if (estadoMensajeResta === 1) {
+                        textoResta = '<p>La resta es como un juego en el que quitamos números. Cuando restamos, estamos encontrando la diferencia entre dos números. Por ejemplo, 7 - 4 = 3. Puedes restar números más grandes haciendo lo mismo.</p>' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoResta()">' +
+                                '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>' +
+                                '<path d="M5 12l14 0" />' +
+                                '<path d="M15 16l4 -4" />' +
+                                '<path d="M15 8l4 4" />' +
+                                '</svg>';
+                        estadoMensajeResta = 2;
+                    } else {
+                        textoResta = '<p>En matemáticas, la resta es una operación que compara dos números y encuentra la diferencia entre ellos. Puedes restar números positivos y negativos. Por ejemplo, 10 - (-3) = 13. También puedes restar números decimales, como 5.7 - 2.4 = 3.3.</p>' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill=" none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoResta()">' +
+                                '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>' +
+                                '<path d="M5 12l14 0" />' +
+                                '<path d="M15 16l4 -4" />' +
+                                '<path d="M15 8l4 4" />' +
+                                '</svg>';
+                        estadoMensajeResta = 0;
+                    }
+
+                    mensajeResta.innerHTML = textoResta;
+                }
+
+                function cambiarTextoMultiplicacion() {
+                    var mensajeMultiplicacion = document.getElementById('mensajeMultiplicacion');
+                    var textoMultiplicacion = '';
+
+                    if (estadoMensajeMultiplicacion === 0) {
+                        textoMultiplicacion = '<p>La multiplicación es como hacer grupos de números. Por ejemplo, si tienes 3 cajas con 4 juguetes en cada una, tienes un total de 12 juguetes. La multiplicación es como agregar números repetidamente.</p>' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoMultiplicacion()">' +
+                                '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>' +
+                                '<path d="M5 12l14 0" />' +
+                                '<path d="M15 16l4 -4" />' +
+                                '<path d="M15 8l4 4" />' +
+                                '</svg>';
+                        estadoMensajeMultiplicacion = 1;
+                    } else if (estadoMensajeMultiplicacion === 1) {
+                        textoMultiplicacion = '<p>La multiplicación es una forma rápida de agregar números muchas veces. Por ejemplo, 3 x 4 = 12. Puedes multiplicar números más grandes haciendo lo mismo.</p>' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoMultiplicacion()">' +
+                                '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>' +
+                                '<path d="M5 12l14 0" />' +
+                                '<path d="M15 16l4 -4" />' +
+                                '<path d="M15 8l4 4" />' +
+                                '</svg>';
+                        estadoMensajeMultiplicacion = 2;
+                    } else {
+                        textoMultiplicacion = '<p>En matemáticas, la multiplicación es una operación que combina dos números para encontrar el resultado de agrandar o repetir un número muchas veces. Puedes multiplicar números grandes, como 7 x 8 = 56, y también puedes multiplicar números decimales, como 2.5 x 3.2 = 8.0.</p>' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoMultiplicacion()">' +
+                                '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>' +
+                                '<path d="M5 12l14 0" />' +
+                                '<path d="M15 16l4 -4" />' +
+                                '<path d="M15 8l4 4" />' +
+                                '</svg>';
+                        estadoMensajeMultiplicacion = 0;
+                    }
+
+                    mensajeMultiplicacion.innerHTML = textoMultiplicacion;
+                }
+
+                function cambiarTextoDivision() {
+                    var mensajeDivision = document.getElementById('mensajeDivision');
+                    var textoDivision = '';
+
+                    if (estadoMensajeDivision === 0) {
+                        textoDivision = '<p>La división es compartir números en partes iguales. Por ejemplo, si tienes 6 caramelos y los quieres compartir con 2 amigos, cada uno obtendrá 3 caramelos. La división es como repartir cosas.</p>' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoDivision()">' +
+                                '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>' +
+                                '<path d="M5 12l14 0" />' +
+                                '<path d="M15 16l4 -4" />' +
+                                '<path d="M15 8l4 4" />' +
+                                '</svg>';
+                        estadoMensajeDivision = 1;
+                    } else if (estadoMensajeDivision === 1) {
+                        textoDivision = '<p>La división es una forma de encontrar cuántas veces un número cabe en otro número. Por ejemplo, 8 ÷ 2 = 4, porque 2 cabe 4 veces en 8. Puedes dividir números más grandes haciendo lo mismo.</p>' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoDivision()">' +
+                                '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>' +
+                                '<path d="M5 12l14 0" />' +
+                                '<path d="M15 16l4 -4" />' +
+                                '<path d="M15 8l4 4" />' +
+                                '</svg>';
+                        estadoMensajeDivision = 2;
+                    } else {
+                        textoDivision = '<p>En matemáticas, la división es una operación que descompone un número en partes iguales. Puedes dividir números grandes, como 30 ÷ 5 = 6. También puedes dividir números decimales, como 7.5 ÷ 1.5 = 5.0.</p>' +
+                                '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right mensaje-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2.5" stroke="#6f32be" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="cambiarTextoDivision()">' +
+                                '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>' +
+                                '<path d="M5 12l14 0" />' +
+                                '<path d="M15 16l4 -4" />' +
+                                '<path d="M15 8l4 4" />' +
+                                '</svg>';
+                        estadoMensajeDivision = 0;
+                    }
+
+                    mensajeDivision.innerHTML = textoDivision;
+                }
+            </script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
     </body>
 </html>

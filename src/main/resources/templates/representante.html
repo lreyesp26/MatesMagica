@@ -63,7 +63,16 @@
     </head>
     <body>
         <div class="container-fluid p-0">
-            <div class="custom-header fixed-header">Matemagicas</div>
+            <div class="custom-header fixed-header">Matemagicas 
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">PERFIL</a></li>
+                        <li><a class="dropdown-item" href="/logout">CERRAR SESION</a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="header-container">
                 <div class="container d-flex flex-column justify-content-center align-items-center vh-100">
                     <div class="row">
@@ -71,11 +80,6 @@
                         <div class="col-sm rep-card">
                             <div class="card custom-border align-items-center" onclick="location.href = '/estudiantes'">
                                 <div class="card-body">Revisar Calificaciones</div>
-                            </div>
-                        </div>
-                        <div class="col-sm rep-card">
-                            <div class="card custom-border align-items-center">
-                                <div class="card-body"> Ver Calificaciones</div>
                             </div>
                         </div>
                         <div class="col-sm rep-card">
@@ -87,5 +91,9 @@
                 </div>
             </div>
         </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
+
+

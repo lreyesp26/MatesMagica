@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.Matemagicas.controlador;
 
 import com.example.Matemagicas.dto.EstudianteCalificacionDTO;
@@ -17,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import com.example.Matemagicas.repositorio.RepresentateRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +35,15 @@ public class LoginController {
     @GetMapping("/representante")
     public String representantepage() {
         return "representante"; // Esto carga la página de estudiantes (estudiante.html)
+    }
+
+    @GetMapping("/index")
+    public String index(@RequestParam(value = "logout", required = false) String logout, Model model) {
+        if (logout != null) {
+            // Agrega un mensaje de éxito de cierre de sesión si lo deseas
+            model.addAttribute("logoutMessage", "Sesión cerrada correctamente.");
+        }
+        return "index"; // Esto carga la página de inicio
     }
 
     @GetMapping("/estudiantes")
@@ -84,11 +90,28 @@ public class LoginController {
             model.addAttribute("userRole", "representante");
             return "redirect:/representante";
         } else if (estudiante != null && estudiante.getContrasenia().equals(contrasenia)) {
+            // Almacenar el nombre y apellido del estudiante en la sesión
+            session.setAttribute("nombreEstudiante", estudiante.getNombre());
+            session.setAttribute("apellidoEstudiante", estudiante.getApellido());
             model.addAttribute("userRole", "estudiante");
             return "redirect:/estudiante";
         } else {
             model.addAttribute("error", "Credenciales incorrectas");
             return "index"; // Vuelve a cargar la página de inicio de sesión con un mensaje de error
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session, HttpServletResponse response) {
+        // Invalida la sesión actual
+        session.removeAttribute("representanteId"); // Cambia "usuario" a "representanteId"
+
+        // Agrega encabezados de respuesta para evitar el almacenamiento en caché
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
+        // Agrega un parámetro aleatorio a la URL de redirección
+        return "redirect:/index?logout=" + Math.random();
     }
 }
