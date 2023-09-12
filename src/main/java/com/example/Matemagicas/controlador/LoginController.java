@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import com.example.Matemagicas.repositorio.RepresentateRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +32,43 @@ public class LoginController {
     private EstudianteRepository estudianteRepository;
 
     @GetMapping("/representante")
-    public String representantepage() {
-        return "representante"; // Esto carga la página de estudiantes (estudiante.html)
+    public String representantepage(HttpSession session) {
+        if ((Long) session.getAttribute("representanteId") != null) {
+            return "representante";
+        }
+        return "redirect:";
+    }
+
+    @GetMapping("/registrorepresentado")
+    public String registrorepresentadopage(HttpSession session) {
+        if ((Long) session.getAttribute("representanteId") != null) {
+            return "registrorepresentado";
+        }
+        return "redirect:";
+    }
+
+    @GetMapping("/estudiante")
+    public String estudiantepage(HttpSession session) {
+        if ((String) session.getAttribute("nombreEstudiante") != null) {
+            return "estudiante";
+        }
+        return "redirect:";
+    }
+
+    @GetMapping("/actividades")
+    public String actividadespage(HttpSession session) {
+        if ((String) session.getAttribute("nombreEstudiante") != null) {
+            return "actividades";
+        }
+        return "redirect:";
+    }
+
+    @GetMapping("/calificaciones")
+    public String calificacionespage(HttpSession session) {
+        if ((String) session.getAttribute("nombreEstudiante") != null) {
+            return "calificaciones";
+        }
+        return "redirect:";
     }
 
     @GetMapping("/index")
@@ -102,16 +136,8 @@ public class LoginController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session, HttpServletResponse response) {
-        // Invalida la sesión actual
-        session.removeAttribute("representanteId"); // Cambia "usuario" a "representanteId"
-
-        // Agrega encabezados de respuesta para evitar el almacenamiento en caché
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
-
-        // Agrega un parámetro aleatorio a la URL de redirección
-        return "redirect:/index?logout=" + Math.random();
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:";
     }
 }

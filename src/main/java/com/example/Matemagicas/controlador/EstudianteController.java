@@ -1,11 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.Matemagicas.controlador;
 
+import com.example.Matemagicas.modelos.Calificacion;
 import com.example.Matemagicas.modelos.Estudiante;
 import com.example.Matemagicas.modelos.Representate;
+import com.example.Matemagicas.repositorio.CalificacionRepository;
 import com.example.Matemagicas.repositorio.EstudianteRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-/**
- *
- * @author Luis
- */
 @Controller
 public class EstudianteController {
 
     @Autowired
     private EstudianteRepository estudianteRepository;
+
+    @Autowired
+    private CalificacionRepository calificacionRepository;
 
     @PostMapping("/guardar-estudiante")
     public String guardarEstudiante(@RequestParam String nombre,
@@ -39,6 +36,7 @@ public class EstudianteController {
             redirectAttributes.addFlashAttribute("error", "El correo electrónico ya está en uso.");
             return "redirect:/registrorepresentado";
         }
+        
         // Obtener el representanteId de la sesión
         Long representanteId = (Long) session.getAttribute("representanteId");
 
@@ -56,11 +54,19 @@ public class EstudianteController {
         estudiante.setRepresentante(representante);
 
         // Guardar el estudiante en la base de datos
-        estudianteRepository.save(estudiante);
+        estudiante = estudianteRepository.save(estudiante);
+        
+        // Crear una instancia de Calificacion y establecer la relación con el estudiante
+        Calificacion calificacion = new Calificacion();
+        calificacion.setEstudiante(estudiante);
+        // Otras configuraciones de la calificación, como materia, nivel y calificación
+
+        // Guardar la calificación en la base de datos
+        calificacionRepository.save(calificacion);
         
         redirectAttributes.addFlashAttribute("success", "Estudiante registrado con éxito.");
         
         // Puedes redirigir a una página de éxito o realizar otras acciones
-         return "redirect:/representante";// Crea esta página si no existe
+        return "redirect:/representante"; // Crea esta página si no existe
     }
 }

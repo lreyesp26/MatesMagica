@@ -32,34 +32,29 @@ public class controlador {
         ModelAndView modelo = new ModelAndView("register");
         return modelo;
     }
-    
-    @GetMapping("/actividades")
+
+    @GetMapping("/actividadesvista")
     public ModelAndView vistaActividades() {
         ModelAndView modelo = new ModelAndView("actividades");
         return modelo;
     }
-    
-    @GetMapping("/calificaciones")
+
+    @GetMapping("/calificacionesvista")
     public ModelAndView vistaCalificaciones() {
         ModelAndView modelo = new ModelAndView("calificaciones");
         return modelo;
     }
-    
-    @GetMapping("/registrorepresentado")
+
+    @GetMapping("/registroactividadrepresentado")
     public ModelAndView vistaregistrorepresentado() {
         ModelAndView modelo = new ModelAndView("registrorepresentado");
         return modelo;
     }
-    
+
     @GetMapping("/calificacionesrepresentante")
     public ModelAndView vistacalifacionesrepresentado() {
         ModelAndView modelo = new ModelAndView("calificacionesrepresentante");
         return modelo;
     }
-    
-    @GetMapping("/estudiante")
-    public ModelAndView estudiantepresentado() {
-        ModelAndView modelo = new ModelAndView("estudiante");
-        return modelo;
-    }
+
 }
