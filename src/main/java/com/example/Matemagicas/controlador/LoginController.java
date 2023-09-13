@@ -17,10 +17,6 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Reyes
- */
 @Controller
 @SessionAttributes({"nombre", "userRole"})
 public class LoginController {
@@ -39,10 +35,12 @@ public class LoginController {
         return "redirect:";
     }
 
-    @GetMapping("/registrorepresentado")
-    public String registrorepresentadopage(HttpSession session) {
+    
+
+    @GetMapping("/perfil")
+    public String perfilpage(HttpSession session) {
         if ((Long) session.getAttribute("representanteId") != null) {
-            return "registrorepresentado";
+            return "perfil";
         }
         return "redirect:";
     }
@@ -121,18 +119,40 @@ public class LoginController {
         if (representante != null && representante.getContrasenia().equals(contrasenia)) {
             // Almacenar el representanteId en la sesión
             session.setAttribute("representanteId", representante.getId());
+            session.setAttribute("nombreRepresentante", representante.getNombre());
+            session.setAttribute("apellidoRepresentante", representante.getApellido());
+            session.setAttribute("correoRepresentante", representante.getCorreoelectronico());
+
             model.addAttribute("userRole", "representante");
             return "redirect:/representante";
         } else if (estudiante != null && estudiante.getContrasenia().equals(contrasenia)) {
             // Almacenar el nombre y apellido del estudiante en la sesión
             session.setAttribute("nombreEstudiante", estudiante.getNombre());
             session.setAttribute("apellidoEstudiante", estudiante.getApellido());
+            session.setAttribute("correoEstudiante", estudiante.getCorreoelectronico());
             model.addAttribute("userRole", "estudiante");
             return "redirect:/estudiante";
         } else {
             model.addAttribute("error", "Credenciales incorrectas");
             return "index"; // Vuelve a cargar la página de inicio de sesión con un mensaje de error
         }
+    }
+
+    @GetMapping("/registrorepresentado")
+    public String registrorepresentadopage2(Model model, HttpSession session) {
+        Long representanteId = (Long) session.getAttribute("representanteId");
+
+        if (representanteId != null) {
+            Representate representante = representanteRepository.findById(representanteId).orElse(null);
+
+            if (representante != null) {
+                List<Estudiante> estudiantes = representante.getEstudiantes();
+                model.addAttribute("estudiantes", estudiantes);
+                return "registrorepresentado";
+            }
+        }
+
+        return "redirect:";
     }
 
     @GetMapping("/logout")

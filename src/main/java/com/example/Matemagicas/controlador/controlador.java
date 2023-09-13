@@ -57,4 +57,15 @@ public class controlador {
         return modelo;
     }
 
+    @GetMapping("/perfilvista")
+    public ModelAndView vistaperfil() {
+        ModelAndView modelo = new ModelAndView("perfil");
+        return modelo;
+    }
+    
+    @GetMapping("/perfilestudiante")
+    public ModelAndView vistaperfilestudiante() {
+        ModelAndView modelo = new ModelAndView("perfilestudiante");
+        return modelo;
+    }
 }
