@@ -12,7 +12,6 @@ public class EstudianteCalificacionDTO {
     private String nombre;
     private String apellido;
     private String materia;
-    private Integer nivel;
     private Double calificacion;
 
     public String getNombre() {
@@ -39,14 +38,6 @@ public class EstudianteCalificacionDTO {
         this.materia = materia;
     }
 
-    public Integer getNivel() {
-        return nivel;
-    }
-
-    public void setNivel(Integer nivel) {
-        this.nivel = nivel;
-    }
-
     public Double getCalificacion() {
         return calificacion;
     }
@@ -54,6 +45,4 @@ public class EstudianteCalificacionDTO {
     public void setCalificacion(Double calificacion) {
         this.calificacion = calificacion;
     }
-    
-    
 }

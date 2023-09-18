@@ -4,6 +4,7 @@ import com.example.Matemagicas.dto.EstudianteCalificacionDTO;
 import com.example.Matemagicas.modelos.Calificacion;
 import com.example.Matemagicas.modelos.Estudiante;
 import com.example.Matemagicas.modelos.Representate;
+import com.example.Matemagicas.repositorio.CalificacionRepository;
 import com.example.Matemagicas.repositorio.EstudianteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,8 +36,6 @@ public class LoginController {
         return "redirect:";
     }
 
-    
-
     @GetMapping("/perfil")
     public String perfilpage(HttpSession session) {
         if ((Long) session.getAttribute("representanteId") != null) {
@@ -62,9 +61,51 @@ public class LoginController {
     }
 
     @GetMapping("/calificaciones")
-    public String calificacionespage(HttpSession session) {
+    public String calificacionespage(HttpSession session, Model model) {
         if ((String) session.getAttribute("nombreEstudiante") != null) {
-            return "calificaciones";
+            Long estudianteId = (Long) session.getAttribute("estudianteId");
+
+            if (estudianteId != null) {
+                Estudiante estudiante = estudianteRepository.findById(estudianteId).orElse(null);
+
+                if (estudiante != null) {
+                    List<Calificacion> calificaciones = estudiante.getCalificaciones();
+                    model.addAttribute("calificaciones", calificaciones);
+                    return "calificaciones";
+                }
+            }
+        }
+        return "redirect:";
+    }
+
+    @GetMapping("/pruebasuma")
+    public String pruebasuma(HttpSession session) {
+        if ((String) session.getAttribute("nombreEstudiante") != null) {
+            return "pruebasuma";
+        }
+        return "redirect:";
+    }
+
+    @GetMapping("/pruebaresta")
+    public String pruebaresta(HttpSession session) {
+        if ((String) session.getAttribute("nombreEstudiante") != null) {
+            return "pruebaresta";
+        }
+        return "redirect:";
+    }
+
+    @GetMapping("/pruebadivision")
+    public String pruebadivision(HttpSession session) {
+        if ((String) session.getAttribute("nombreEstudiante") != null) {
+            return "pruebadivision";
+        }
+        return "redirect:";
+    }
+
+    @GetMapping("/pruebamultiplicacion")
+    public String pruebamultiplicacion(HttpSession session) {
+        if ((String) session.getAttribute("nombreEstudiante") != null) {
+            return "pruebamultiplicacion";
         }
         return "redirect:";
     }
@@ -98,7 +139,6 @@ public class LoginController {
                         dto.setNombre(estudiante.getNombre());
                         dto.setApellido(estudiante.getApellido());
                         dto.setMateria(calificacion.getMateria());
-                        dto.setNivel(calificacion.getNivel());
                         dto.setCalificacion(calificacion.getCalificacion());
                         estudiantesConCalificaciones.add(dto);
                     }
@@ -126,7 +166,8 @@ public class LoginController {
             model.addAttribute("userRole", "representante");
             return "redirect:/representante";
         } else if (estudiante != null && estudiante.getContrasenia().equals(contrasenia)) {
-            // Almacenar el nombre y apellido del estudiante en la sesión
+            // Almacenar el estudianteId en la sesión
+            session.setAttribute("estudianteId", estudiante.getId());
             session.setAttribute("nombreEstudiante", estudiante.getNombre());
             session.setAttribute("apellidoEstudiante", estudiante.getApellido());
             session.setAttribute("correoEstudiante", estudiante.getCorreoelectronico());

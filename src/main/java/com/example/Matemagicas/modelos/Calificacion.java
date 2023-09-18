@@ -15,9 +15,6 @@ public class Calificacion {
     private String materia;
 
     @Column
-    private Integer nivel;
-
-    @Column
     private Double calificacion;
 
     @ManyToOne // Muchas calificaciones pueden pertenecer a un estudiante

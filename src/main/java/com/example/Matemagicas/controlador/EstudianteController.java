@@ -18,9 +18,6 @@ public class EstudianteController {
     @Autowired
     private EstudianteRepository estudianteRepository;
 
-    @Autowired
-    private CalificacionRepository calificacionRepository;
-
     @PostMapping("/guardar-estudiante")
     public String guardarEstudiante(@RequestParam String nombre,
             @RequestParam String apellido,
@@ -60,9 +57,6 @@ public class EstudianteController {
         Calificacion calificacion = new Calificacion();
         calificacion.setEstudiante(estudiante);
         // Otras configuraciones de la calificación, como materia, nivel y calificación
-
-        // Guardar la calificación en la base de datos
-        calificacionRepository.save(calificacion);
         
         redirectAttributes.addFlashAttribute("success", "Estudiante registrado con éxito.");
         
